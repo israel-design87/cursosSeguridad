@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>SeguridadPro</h1>
+    <p>Somos una empresa dedicada a la capacitación en seguridad industrial y protección civil.</p>
+    <p>Ofrecemos materiales de alta calidad, presentaciones interactivas y acceso exclusivo al contenido mediante suscripción.</p>
+
+    <a href="/signin/" class="btn">Iniciar sesión</a>
+
+    {% if request.user.is_authenticated and not request.user.perfilusuario.pagado %}
+        <form action="/checkout/" method="get" style="margin-top: 20px;">
+            <button type="submit" class="btn">Pagar acceso</button>
+        </form>
+    {% endif %}
+{% endblock %}
