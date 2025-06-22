@@ -1,5 +1,7 @@
 set -o errexit
 
+python manage.py migrate
+
 #poetry install
 
 #pip install -r requirements.txt
