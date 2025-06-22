@@ -34,7 +34,4 @@ urlpatterns = [
     path('registro_exitoso/', views.registro_exitoso, name='registro_exitoso'),
     path('registro_cancelado/', views.registro_cancelado, name='registro_cancelado'),
     path('inicio/', views.inicio, name='inicio'),
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
