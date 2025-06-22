@@ -23,6 +23,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
 
+
 def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {
@@ -33,11 +34,11 @@ def signup(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            
+
             # Guardar temporalmente en sesión
             request.session['signup_username'] = username
             request.session['signup_password'] = password
-            
+
             # Crear sesión de pago Stripe
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -90,6 +91,7 @@ def signout(request):
     logout(request)
     return redirect('home')
 
+
 def convert_pptx_to_pdf(pptx_path, pdf_path):
     ppt = PPTXPresentation(pptx_path)
     c = canvas.Canvas(pdf_path, pagesize=letter)
@@ -112,6 +114,7 @@ def convert_pptx_to_pdf(pptx_path, pdf_path):
 
     c.save()
 
+
 @login_required
 def home(request):
     # Verifica si el usuario tiene un perfil y ha pagado
@@ -132,8 +135,7 @@ def home(request):
     # Cargar presentaciones existentes (podrías filtrar por usuario si lo deseas)
     presentations = []
     for p in Presentation.objects.all().order_by('-uploaded_at'):
-        if p.pptx_file and os.path.isfile(p.pptx_file.path):
-            presentations.append(p)
+        presentations = Presentation.objects.all().order_by('-uploaded_at')
 
     return render(request, 'home.html', {
         'form': form,
@@ -150,14 +152,9 @@ def delete_presentation(request, presentation_id):
         return redirect('home')
 
     if request.method == 'POST':
-        # Eliminar archivos físicos si existen
-        if presentation.pptx_file and presentation.pptx_file.path:
-            if os.path.exists(presentation.pptx_file.path):
-                os.remove(presentation.pptx_file.path)
-
-        # Eliminar el objeto de la base de datos
+        if presentation.pptx_file:
+            presentation.pptx_file.delete(save=False)
         presentation.delete()
-
         return redirect('home')
 
 
@@ -201,12 +198,15 @@ def pago_exitoso(request):
     perfil.save()
     return redirect('home')
 
+
 @login_required
 def pago_cancelado(request):
     return render(request, 'pago_cancelado.html')
 
+
 def inicio(request):
     return render(request, 'inicio.html')
+
 
 def registro_exitoso(request):
     username = request.session.pop('signup_username', None)
@@ -214,7 +214,8 @@ def registro_exitoso(request):
 
     if username and password:
         try:
-            user = User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(
+                username=username, password=password)
             login(request, user)
 
             # Marca como pagado
@@ -227,6 +228,7 @@ def registro_exitoso(request):
             return redirect('/signup/?error=usuario_existente')
     else:
         return redirect('/signup/?error=datos_invalidos')
+
 
 def registro_cancelado(request):
     # Limpiar sesión

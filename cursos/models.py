@@ -31,9 +31,9 @@ class Presentation(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Elimina los archivos físicos al borrar el modelo
-        if self.pptx_file and os.path.isfile(self.pptx_file.path):
-            os.remove(self.pptx_file.path)
+    # Elimina el archivo del almacenamiento (S3 o local)
+     if self.pptx_file:
+        self.pptx_file.delete(save=False)
         super().delete(*args, **kwargs)
 
 

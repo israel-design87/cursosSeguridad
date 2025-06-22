@@ -34,7 +34,9 @@
         <td>{{ presentation.uploaded_at|date:"SHORT_DATE_FORMAT" }}</td>
         <td>
           {% if presentation.pptx_file %}
-          <a href="{{ presentation.pptx_file.url }}" class="btn btn-sm btn-info" download>Descargar PPTX</a>
+          <a href="{{ presentation.pptx_file.url }}" class="btn btn-sm btn-info" download target="_blank">
+            Descargar PPTX
+          </a>
           {% else %}
           <span class="badge bg-warning">Archivo no disponible</span>
           {% endif %}
