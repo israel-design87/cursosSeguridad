@@ -1,10 +1,12 @@
 set -o errexit
 
+echo "Instalando dependencias..."
+pip install -r requirements.txt
+
+echo "Aplicando migraciones..."
 python manage.py migrate
 
-#poetry install
-
-#pip install -r requirements.txt
-
+echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --no-input
-python manage.py migrate
+
+echo "Build terminado correctamente."
