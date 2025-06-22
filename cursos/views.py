@@ -164,7 +164,10 @@ def delete_presentation(request, presentation_id):
 def root_redirect(request):
     if request.user.is_authenticated:
         return redirect('home')
-    return redirect('signin')
+    # Renderizamos el signin con el formulario para no usar redirección 302
+    return render(request, 'signin.html', {
+        'form': AuthenticationForm()
+    })
 
 
 @login_required
