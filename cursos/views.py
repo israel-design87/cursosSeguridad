@@ -128,6 +128,8 @@ def home(request):
             presentation = form.save(commit=False)
             presentation.uploaded_by = request.user
             presentation.save()
+            print("Archivo guardado en:", presentation.pptx_file.url)
+            print("Ruta interna:", presentation.pptx_file.name)
             return redirect('home')
     else:
         form = PowerPointUploadForm()
