@@ -18,6 +18,9 @@ import os
 from django.conf import settings
 from django.http import FileResponse
 from django.core.exceptions import ObjectDoesNotExist
+import boto3
+from botocore.exceptions import ClientError
+from django.conf import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
