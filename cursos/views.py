@@ -117,6 +117,23 @@ def convert_pptx_to_pdf(pptx_path, pdf_path):
 
 @login_required
 def home(request):
+    print("Access Key:", settings.AWS_ACCESS_KEY_ID)
+    print("Secret Key:", settings.AWS_SECRET_ACCESS_KEY)
+    print("Bucket:", settings.AWS_STORAGE_BUCKET_NAME)
+    print("Región:", settings.AWS_S3_REGION_NAME)
+
+    # Test de conexión a S3
+    try:
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME,
+        )
+        response = s3.list_objects_v2(Bucket=settings.AWS_STORAGE_BUCKET_NAME)
+        print("✅ Conexión S3 exitosa. Objetos encontrados:", response.get('KeyCount', 0))
+    except ClientError as e:
+        print("❌ Error de conexión con S3:", e)
     # Verifica si el usuario tiene un perfil y ha pagado
     if not hasattr(request.user, 'perfilusuario') or not request.user.perfilusuario.pagado:
         return redirect('crear_checkout')
